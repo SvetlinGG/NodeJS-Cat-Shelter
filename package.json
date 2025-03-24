@@ -1,0 +1,12 @@
+{
+  "name": "nodejs-cat-shelter",
+  "version": "1.0.0",
+  "description": "Cat-Shelter",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
