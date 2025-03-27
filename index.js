@@ -4,6 +4,7 @@ const indexTemplate = require('./views/home/index.html');
 const siteCss = require('./content/styles/site.css');
 const addBreedHtml = require('./views/addBreed.html');
 const addCatHtml = require('./views/addCat.html');
+const editCatHtml = require('./views/editCat.html');
 
 
 const port = 2000;
@@ -67,6 +68,9 @@ const server = http.createServer((req, res) => {
                 break;
             case '/cats/add-cat':
                 res.write(addCatHtml);
+                break;
+            case '/cats/edit-cat':
+                res.write(editCatHtml);
                 break;
             default:
                 // TO DO return error page
