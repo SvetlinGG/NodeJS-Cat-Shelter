@@ -45,6 +45,30 @@ const cats = [
     }
 ];
 
+function path(path){
+    return  fs.readFile(path, {encoding: 'utf-8'});
+
+     
+}
+
+async function renderCat(catData){
+    let catHtml = await fs.readFile('./views/cat.html');
+
+    catHtml = catHtml.replaceAll('{{name}}', catData.name);
+    catHtml = catHtml.replaceAll('{{description}}', catData.description);
+    catHtml = catHtml.replaceAll('{{imageUrl}}', catData.imageUrl);
+    catHtml = catHtml.replaceAll('{{breed}}', catData.breed);
+
+    return catHtml;
+}
+async function renderHome(cats) {
+    let indexHtml = await readFile('./views/home/index.html');
+    const catsHtmlResult = await Promise.all(cats.map(renderCat));
+
+    indexHtml = indexHtml.replaceAll('{{cats}}', catsHtmlResult.join('\n'));
+    return indexHtml;
+}
+
 const server = http.createServer( async (req, res) => {
 
     if ( req.url === '/styles/site.css'){
@@ -57,30 +81,31 @@ const server = http.createServer( async (req, res) => {
     }
     
     
-        switch (req.url) {
-            case '/':
-                const indexHtml = await fs.readFile('./views/home/index.html');
-                res.write(indexHtml);
-                break;
-            case '/cats/add-breed':
-                const addBreedHtml = await fs.readFile('./views/addBreed.html')
-                res.write(addBreedHtml);
-                break;
-            case '/cats/add-cat':
-                const addCatHtml = await fs.readFile('./views/addCat.html')
-                res.write(addCatHtml);
-                break;
-            case '/cats/edit-cat':
-                const editCatHtml = await fs.readFile('./views/editCat.html')
-                res.write(editCatHtml);
-                break;
-            case '/cats/cat-shelter':
-                res.write(catShelterHtml);
-                break;
-            default:
+switch (req.url) {
+    case '/':
+        const indexHtml = await renderHome(cats);
+
+        res.write(indexHtml);
+        break;
+    case '/cats/add-breed':
+        const addBreedHtml = await readFile('./views/addBreed.html');
+        res.write(addBreedHtml);
+        break;
+    case '/cats/add-cat':
+        const addCatHtml = await readFile('./views/addCat.html')
+        res.write(addCatHtml);
+        break;
+    case '/cats/edit-cat':
+        const editCatHtml = await readFile('./views/editCat.html')
+        res.write(editCatHtml);
+        break;
+    case '/cats/cat-shelter':
+        res.write(catShelterHtml);
+        break;
+default:
                 // TO DO return error page
-                res.write(`<h1>Page Not Found!</h1>`)
-                break;
+    res.write(`<h1>Page Not Found!</h1>`)
+    break;
         }
    
     res.end();
