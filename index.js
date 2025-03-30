@@ -5,6 +5,7 @@ const siteCss = require('./content/styles/site.css');
 const addBreedHtml = require('./views/addBreed.html');
 const addCatHtml = require('./views/addCat.html');
 const editCatHtml = require('./views/editCat.html');
+const catShelterHtml = require('./views/catShelter.html');
 
 
 const port = 2000;
@@ -71,6 +72,9 @@ const server = http.createServer((req, res) => {
                 break;
             case '/cats/edit-cat':
                 res.write(editCatHtml);
+                break;
+            case '/cats/cat-shelter':
+                res.write(catShelterHtml);
                 break;
             default:
                 // TO DO return error page
