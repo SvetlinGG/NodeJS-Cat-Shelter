@@ -53,21 +53,18 @@ function path(path){
 
 function render(html, data){
 
-    Object
+    const resultHtml =  Object
         .keys(data)
-        .reduce((result, key) => result.replaceAll(`{{${key}}}`, data[key]), html)
+        .reduce((result, key) => result.replaceAll(`{{${key}}}`, data[key]), html);
+
+    return resultHtml;
 }
 
 
 async function renderCat(catData){
     let catHtml = await fs.readFile('./views/cat.html');
 
-    catHtml = catHtml.replaceAll('{{name}}', catData.name);
-    catHtml = catHtml.replaceAll('{{description}}', catData.description);
-    catHtml = catHtml.replaceAll('{{imageUrl}}', catData.imageUrl);
-    catHtml = catHtml.replaceAll('{{breed}}', catData.breed);
-
-    return catHtml;
+    return render(catHtml, catData);
 }
 
 
@@ -76,8 +73,8 @@ async function renderHome(cats) {
     let indexHtml = await readFile('./views/home/index.html');
     const catsHtmlResult = await Promise.all(cats.map(renderCat));
 
-    indexHtml = indexHtml.replaceAll('{{cats}}', catsHtmlResult.join('\n'));
-    return indexHtml;
+    return render(indexHtml, {cats: catsHtmlResult.join('\n')});
+    
 }
 
 const server = http.createServer( async (req, res) => {
@@ -97,7 +94,7 @@ switch (req.url) {
         const indexHtml = await renderHome(cats);
 
         res.write(indexHtml);
-        break;
+        return res.end();
     case '/cats/add-breed':
         const addBreedHtml = await readFile('./views/addBreed.html');
         res.write(addBreedHtml);
