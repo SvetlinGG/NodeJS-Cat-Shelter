@@ -1,0 +1,38 @@
+{
+    // Използвайте подсказките, за да видите възможните атрибути.
+    // Посочете, за да видите описания на съществуващите атрибути.
+    // За повече информация посетете: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "name": "Nodemon Debug",
+            "program": "${workspaceFolder}/index.js",
+            "request": "launch",
+            "restart": true,
+            "runtimeExecutable": "nodemon",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        
+        {
+            "name": "Attach to Chrome",
+            "port": 2000,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}/index.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js"
+        }
+    ]
+}
