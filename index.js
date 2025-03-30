@@ -1,10 +1,7 @@
 const http = require('http');
+const fs = require('fs/promises');
 
-const indexTemplate = require('./views/home/index.html');
 const siteCss = require('./content/styles/site.css');
-const addBreedHtml = require('./views/addBreed.html');
-const addCatHtml = require('./views/addCat.html');
-const editCatHtml = require('./views/editCat.html');
 const catShelterHtml = require('./views/catShelter.html');
 
 
@@ -48,7 +45,7 @@ const cats = [
     }
 ];
 
-const server = http.createServer((req, res) => {
+const server = http.createServer( async (req, res) => {
 
     if ( req.url === '/styles/site.css'){
         res.writeHead(200, {
@@ -62,15 +59,19 @@ const server = http.createServer((req, res) => {
     
         switch (req.url) {
             case '/':
-                res.write(indexTemplate(cats));
+                const indexHtml = await fs.readFile('./views/home/index.html');
+                res.write(indexHtml);
                 break;
             case '/cats/add-breed':
+                const addBreedHtml = await fs.readFile('./views/addBreed.html')
                 res.write(addBreedHtml);
                 break;
             case '/cats/add-cat':
+                const addCatHtml = await fs.readFile('./views/addCat.html')
                 res.write(addCatHtml);
                 break;
             case '/cats/edit-cat':
+                const editCatHtml = await fs.readFile('./views/editCat.html')
                 res.write(editCatHtml);
                 break;
             case '/cats/cat-shelter':

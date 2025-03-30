@@ -1,7 +1,5 @@
 
-const catTemplate = require('../cat.html');
-
-module.exports = (cats) => `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,11 +31,11 @@ module.exports = (cats) => `<!DOCTYPE html>
     <main>
         <section class="cats">
             <ul>
-            ${cats.map(catTemplate).join('\n')}
+            {{cats}}
             </ul>
         </section>
     </main>
 
 </body>
 
-</html>`
+</html>
