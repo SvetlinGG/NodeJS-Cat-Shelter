@@ -51,6 +51,14 @@ function path(path){
      
 }
 
+function render(html, data){
+
+    Object
+        .keys(data)
+        .reduce((result, key) => result.replaceAll(`{{${key}}}`, data[key]), html)
+}
+
+
 async function renderCat(catData){
     let catHtml = await fs.readFile('./views/cat.html');
 
@@ -61,6 +69,9 @@ async function renderCat(catData){
 
     return catHtml;
 }
+
+
+
 async function renderHome(cats) {
     let indexHtml = await readFile('./views/home/index.html');
     const catsHtmlResult = await Promise.all(cats.map(renderCat));
