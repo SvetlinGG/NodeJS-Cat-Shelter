@@ -113,15 +113,16 @@ const server = http.createServer( async (req, res) => {
                     body += chunk;
                 });
                 req.on('end', () => {
+                    
                     console.log(body);
                     
-                    res.end();
+                    return res.end();
                 });
             }
             
             break;
         case '/cats/edit-cat':
-            const editCatHtml = await readFile('./views/editCat.html')
+            const editCatHtml = await readFile('./views/editCat.html');
             res.write(editCatHtml);
             return res.end();
             
@@ -131,7 +132,7 @@ const server = http.createServer( async (req, res) => {
             
     default:
                 // TO DO return error page
-        res.write(`<h1>Page Not Found!</h1>`)
+        res.write(`<h1>Page Not Found!</h1>`);
         return res.end();
         
         }
