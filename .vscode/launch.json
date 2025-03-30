@@ -19,13 +19,6 @@
         },
         
         {
-            "name": "Attach to Chrome",
-            "port": 2000,
-            "request": "attach",
-            "type": "chrome",
-            "webRoot": "${workspaceFolder}/index.js"
-        },
-        {
             "type": "node",
             "request": "launch",
             "name": "Debug Server",

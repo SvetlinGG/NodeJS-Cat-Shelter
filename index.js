@@ -1,8 +1,10 @@
 const http = require('http');
-const fs = require('fs/promises');
+const fs = require('fs');
+const querystring = require('querystring');
 
 const siteCss = require('./content/styles/site.css');
 const catShelterHtml = require('./views/catShelter.html');
+const { readFile } = require('fs/promises');
 
 
 const port = 2000;
@@ -52,6 +54,7 @@ function path(path){
 }
 
 function render(html, data){
+    html = html.toString();
 
     const resultHtml =  Object
         .keys(data)
@@ -62,7 +65,7 @@ function render(html, data){
 
 
 async function renderCat(catData){
-    let catHtml = await fs.readFile('./views/cat.html');
+    let catHtml = await readFile('./views/cat.html');
 
     return render(catHtml, catData);
 }
@@ -89,34 +92,51 @@ const server = http.createServer( async (req, res) => {
     }
     
     
-switch (req.url) {
-    case '/':
-        const indexHtml = await renderHome(cats);
+    switch (req.url) {
+        case '/':
+            const indexHtml = await renderHome(cats);
 
-        res.write(indexHtml);
-        return res.end();
-    case '/cats/add-breed':
-        const addBreedHtml = await readFile('./views/addBreed.html');
-        res.write(addBreedHtml);
-        break;
-    case '/cats/add-cat':
-        const addCatHtml = await readFile('./views/addCat.html')
-        res.write(addCatHtml);
-        break;
-    case '/cats/edit-cat':
-        const editCatHtml = await readFile('./views/editCat.html')
-        res.write(editCatHtml);
-        break;
-    case '/cats/cat-shelter':
-        res.write(catShelterHtml);
-        break;
-default:
+            res.write(indexHtml);
+            return res.end();
+        case '/cats/add-breed':
+            const addBreedHtml = await readFile('./views/addBreed.html');
+            res.write(addBreedHtml);
+            return res.end();
+        case '/cats/add-cat':
+
+            if ( req.method === 'GET'){
+                const addCatHtml = await readFile('./views/addCat.html')
+                res.write(addCatHtml);
+            }else if ( req.method === 'POST'){
+                let body = '';
+                req.on('data', (chunk) => {
+                    body += chunk;
+                });
+                req.on('end', () => {
+                    console.log(body);
+                    
+                    res.end();
+                });
+            }
+            
+            break;
+        case '/cats/edit-cat':
+            const editCatHtml = await readFile('./views/editCat.html')
+            res.write(editCatHtml);
+            return res.end();
+            
+        case '/cats/cat-shelter':
+            res.write(catShelterHtml);
+            return res.end();
+            
+    default:
                 // TO DO return error page
-    res.write(`<h1>Page Not Found!</h1>`)
-    break;
+        res.write(`<h1>Page Not Found!</h1>`)
+        return res.end();
+        
         }
    
-    res.end();
+    
 });
 
 server.listen(port);
