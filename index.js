@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const querystring = require('querystring');
+const {EOL} = require('os');
 
 const siteCss = require('./content/styles/site.css');
 const catShelterHtml = require('./views/catShelter.html');
@@ -64,6 +65,7 @@ function render(html, data){
 }
 
 
+
 async function renderCat(catData){
     let catHtml = await readFile('./views/cat.html');
 
@@ -78,6 +80,18 @@ async function renderHome(cats) {
 
     return render(indexHtml, {cats: catsHtmlResult.join('\n')});
     
+}
+
+function parsePart(part){
+    const namePattern = new RegExp(`name="(.+)"`, 'm');
+    const valuePattern = new RegExp(`${EOL}${EOL}(.*)${EOL}`, 'm');
+    
+    const [match, name] = part.match(namePattern);
+    const [_, value] = part.match(valuePattern);
+    console.log(name);
+    console.log(value);
+    
+    return [name, value];
 }
 
 const server = http.createServer( async (req, res) => {
@@ -113,10 +127,17 @@ const server = http.createServer( async (req, res) => {
                     body += chunk;
                 });
                 req.on('end', () => {
+                    const boundary = req.headers['content-type'].split('boundary=').at(1);
+                    const parts = body.split(`--${boundary}`).filter(part => !!part).slice(0, -1);
+
+                    const [name, value] = parsePart(parts[2]);
+                    console.log(name);
+                    console.log(value);
                     
-                    console.log(body);
-                    
-                    return res.end();
+
+                    //console.log(body);
+                    //console.log(parts);
+                    res.end();
                 });
             }
             
