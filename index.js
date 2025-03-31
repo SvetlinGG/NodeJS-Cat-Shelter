@@ -126,17 +126,15 @@ const server = http.createServer( async (req, res) => {
                 req.on('data', (chunk) => {
                     body += chunk;
                 });
-                req.on('end', () => {
+                req.on('end', async () => {
                     const boundary = req.headers['content-type'].split('boundary=').at(1);
                     const parts = body.split(`--${boundary}`).filter(part => !!part).slice(0, -1);
 
                     const [name, value] = parsePart(parts[2]);
                     console.log(name);
                     console.log(value);
-                    
+                    await fs.writeFile(`./uploads/image.jpg`, value, {encoding: 'binary'});
 
-                    //console.log(body);
-                    //console.log(parts);
                     res.end();
                 });
             }
